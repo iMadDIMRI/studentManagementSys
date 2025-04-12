@@ -1,6 +1,6 @@
 
 
-void addStudent(void){
+void addStudent(FILE*fileR,FILE*fileW){
     char FName[20],LName[20],Sector[7],Year[5],ARating[6];
     char *studentInfo=(char*)malloc(100*sizeof(char));
 
@@ -29,22 +29,6 @@ void addStudent(void){
     // Combine all the info into studentInfo
     snprintf(studentInfo, 100, "%s %s %s %s %s", FName, LName, Sector, Year, ARating);
 
-
-    // Open file in Both mode R for checking for Duplicate and A for adding the new student
-    FILE *fileR = fopen("Database.txt", "r");
-    if (fileR == NULL) {
-        printf("Error opening file!\n");
-        free(studentInfo);
-        return;
-    }
-    FILE *fileW = fopen("Database.txt", "a");
-    if (fileW == NULL) {
-        printf("Error opening file!\n");
-        free(studentInfo);
-        return;
-    }
-
-
    if (isInDB(studentInfo,fileR)){
     printf("This Student is already in th DataBase");
    }
@@ -54,14 +38,12 @@ void addStudent(void){
     fprintf(fileW, "%s\n", studentInfo);
    }
 
-   //Close files and free the allocated memory
-    fclose(fileW);
-    fclose(fileR);
     free(studentInfo);
 
 }
 
 int isInDB(char* studentInfo,FILE*file){
+    rewind(file);
     char line[100];
     //checking line by line for the possibility of a Duplicate
     while (fgets(line, sizeof(line), file)) {
@@ -71,13 +53,8 @@ int isInDB(char* studentInfo,FILE*file){
     return 0;
 }
 
-void showAllS(void){
-    FILE *file = fopen("DataBase.txt", "r");
-    if (file == NULL) {
-        printf("Error opening file!\n");
-        return;
-    }
-
+void showAllS(FILE*file){
+    rewind(file);
     int n=1;
     char line[100];
 
@@ -87,5 +64,17 @@ void showAllS(void){
     printf("Student %d: %s\n", n, line);
     n++;
     }
-    fclose(file);
+}
+
+void searchS(FILE *file,char *student){
+    rewind(file);
+    char line[100];
+    while(fgets(line, sizeof(line), file)){
+        if (strstr(line, student) !=NULL){
+            line[strcspn(line, "\n")] = '\0';
+            printf("%s",line);
+            return;
+        }
+    }
+    printf("the Student you entered is not in the DataBase");
 }
