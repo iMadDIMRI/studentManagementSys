@@ -5,19 +5,13 @@
 
 int main(){
     char studentN[100];
-    FILE *fileR = fopen("Database.txt", "r");
-    if (fileR == NULL) {
+    FILE *file = fopen("Database.txt", "rb+");
+    if (file == NULL) {
         printf("Error opening file!\n");
         return 1;
     }
-    FILE *fileW = fopen("Database.txt", "a");
-    if (fileW == NULL) {
-        printf("Error opening file!\n");
-        return 1;
-    }
-
-    //Close files
-    fclose(fileW);
-    fclose(fileR);
+    showAllS(file);
+    //Close file
+    fclose(file);
     return 1;
 }
