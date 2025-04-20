@@ -85,7 +85,46 @@ void searchS(FILE *file,char *FName, char *LName){
     printf("the Student you entered is not in the DataBase");
 }
 
-void editS(FILE* file,char* student){
-
+void editS(FILE* file,char *FName, char *LName){
+    rewind(file);
+    int choice=-1;
+    Student temp;
+    char NLName[20],NFName[20];
+    while(fread(&temp, sizeof(Student),1,file)){
+        if (strcmp(temp.FName, FName) == 0 &&
+        strcmp(temp.LName,LName) == 0 ){
+            while(choice){
+                printf("Which information are you changing?\n 1:First Name \n 2:Last Name \n 3:Sector \n 4:Year \n 5:Average Rating\n 0:Done.\n ");
+                scanf("%d",&choice);
+                switch(choice){
+                    case 1:
+                    printf("Please enter the new First Name:\n");
+                    scanf("%s",temp.FName);
+                    break;
+                    case 2:
+                    printf("Please enter the new Last Name:\n");
+                    scanf("%s",temp.LName);
+                    break;                
+                    case 3:
+                    printf("Please enter the new Sector:\n");
+                    scanf("%s",temp.Sector);
+                    break;
+                    case 4:
+                    printf("Please enter the new Year:\n");
+                    scanf("%s",temp.Year);
+                    break;
+                    case 5:
+                    printf("Please enter the new Average Rating:\n");
+                    scanf("%s",temp.ARating);
+                    break;
+                    case 0:
+                    break;
+                }
+            }
+            printf("Good!! the informations of the student you worked on became: \n Student Name: %s %s | Sector: %s | Year: %s | ARating: %s\n", temp.FName, temp.LName, temp.Sector, temp.Year, temp.ARating);
+            fseek(file,-sizeof(Student), SEEK_CUR);
+            fwrite(&temp, sizeof(Student), 1, file);
+        }
+    }
 }
 
