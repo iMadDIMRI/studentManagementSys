@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
 typedef struct {
     char FName[20];
@@ -6,6 +9,22 @@ typedef struct {
     char Year[5];
     char ARating[6];
 } Student;
+
+int isInDB(FILE *file, Student *target) {
+    rewind(file);
+    Student temp;
+
+    while (fread(&temp, sizeof(Student), 1, file)) {
+        if (strcmp(temp.FName, target->FName) == 0 &&
+            strcmp(temp.LName, target->LName) == 0 &&
+            strcmp(temp.Sector, target->Sector) == 0 &&
+            strcmp(temp.Year, target->Year) == 0 &&
+            strcmp(temp.ARating, target->ARating) == 0) {
+            return 1; //Found
+        }
+    }
+    return 0; //Not found
+}
 
 void addStudent(FILE *file){
     Student *temp = (Student *)malloc(sizeof(Student));
@@ -41,22 +60,6 @@ void addStudent(FILE *file){
     fwrite(temp, sizeof(Student),1,file);
    }
    free(temp);
-}
-
-int isInDB(FILE *file, Student *target) {
-    rewind(file);
-    Student temp;
-
-    while (fread(&temp, sizeof(Student), 1, file)) {
-        if (strcmp(temp.FName, target->FName) == 0 &&
-            strcmp(temp.LName, target->LName) == 0 &&
-            strcmp(temp.Sector, target->Sector) == 0 &&
-            strcmp(temp.Year, target->Year) == 0 &&
-            strcmp(temp.ARating, target->ARating) == 0) {
-            return 1; //Found
-        }
-    }
-    return 0; //Not found
 }
 
 void showAllS(FILE*file){
@@ -122,8 +125,9 @@ void editS(FILE* file,char *FName, char *LName){
                 }
             }
             printf("Good!! the informations of the student you worked on became: \n Student Name: %s %s | Sector: %s | Year: %s | ARating: %s\n", temp.FName, temp.LName, temp.Sector, temp.Year, temp.ARating);
-            fseek(file,-sizeof(Student), SEEK_CUR);
+            fseek(file,-(long)sizeof(Student), SEEK_CUR);
             fwrite(&temp, sizeof(Student), 1, file);
+            break;
         }
     }
 }
