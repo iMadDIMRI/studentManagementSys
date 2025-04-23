@@ -150,3 +150,41 @@ void deleteS(FILE* file,char *FName, char *LName){
         printf("error: %d\n",errno);
     }
 }
+
+int FormVerif(char* Word,char* Type){
+    int Valide=1,n;
+    if (strcmp(Type,"FName")==0){
+        if ((isupper(Word[0])==0)) Valide=0;
+        for (int i=1;i<strlen(Word);i++){
+            if (!(islower(Word[i]) || Word[i]==' ')) Valide=0;
+        }
+    }
+    if (strcmp(Type,"LName")==0){
+        for (int i=0;i<strlen(Word);i++){
+            if (!(isupper(Word[i]) || Word[i]==' ')) Valide=0;
+            }
+        }
+    if (strcmp(Type,"Year")==0){
+        for (int i=0;i<strlen(Word);i++){
+            if (!(isdigit(Word[i]))) Valide=0;
+            }
+    }
+    if (strcmp(Type,"Sector")==0){
+        for (int i=0;i<strlen(Word);i++){
+            if (!(isupper(Word[i]))) Valide=0;
+            }
+        }
+    if (strcmp(Type,"ARating")==0){
+        n=0;
+        for (int i=0;i<strlen(Word);i++){
+            if (!(isdigit(Word[i]))){
+            if ((Word[i]=='.'|| Word[i]==',')&& n==0) {
+                n++;
+                continue;
+            Valide=0;
+            }
+        }
+    }
+}
+        return Valide;
+    }

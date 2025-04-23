@@ -4,6 +4,12 @@
 #include "FonctionSource.c"
 #include <unistd.h>
 #include <errno.h>
+#include <conio.h>
+
+void clrscr()
+{
+    system("@cls||clear");
+}
 
 int main(){
     char FName[20],LName[20];
@@ -12,10 +18,10 @@ int main(){
     FILE *file = fopen("Database.txt", "rb+");
     if (file == NULL) {
         printf("Error opening file!\n");
-        return 1;
+        return 0;
     }
     while(N){
-        printf("MAIN MENU:\n 1:Add a student \n 2:Search a stuent \n 3:Show All student \n 4:Change a student's info \n 5:Delete a student\n 0:Exit the programme.\n ");
+        printf("MAIN MENU:\n 1:Add a student \n 2:Search a student \n 3:Show All student \n 4:Change a student's info \n 5:Delete a student \n 6:Delete ALL students \n 7:Clear Window \n 0:Exit the programme.\n ");
         scanf("%d",&N);
         switch(N){
             case 1:
@@ -44,6 +50,18 @@ int main(){
             printf("Enter the Last Name:\n");
             scanf("%19s",LName);
             deleteS(file,FName,LName);
+            break;
+            case 6:
+            fclose(file);
+            FILE *file = fopen("Database.txt", "wb+");
+            if (file == NULL) {
+                printf("Error reseting file!\n");
+                return 0;
+            }
+            break;
+            case 7:
+            clrscr(); // Clear the screen
+            printf("Screen cleared!\n");
             break;
             case 0:
             break;
