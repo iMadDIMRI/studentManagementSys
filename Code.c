@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "FonctionSource.c"
 #include <unistd.h>
+#include <errno.h>
 
 int main(){
     char FName[20],LName[20];

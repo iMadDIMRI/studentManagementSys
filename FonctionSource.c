@@ -146,5 +146,7 @@ void deleteS(FILE* file,char *FName, char *LName){
         fseek(file,sizeof(Student),SEEK_CUR);
     }
     fseek(file,-(long)sizeof(Student),SEEK_END);
-    ftruncate(fileno(file), ftell(file));
+    if (truncate("Database.txt", ftell(file))){
+        printf("error: %d\n",errno);
+    }
 }
