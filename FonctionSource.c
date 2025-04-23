@@ -1,6 +1,3 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
 
 typedef struct {
     char FName[20];
@@ -132,3 +129,22 @@ void editS(FILE* file,char *FName, char *LName){
     }
 }
 
+void deleteS(FILE* file,char *FName, char *LName){
+    rewind(file);
+    long position;
+    Student temp;
+    while(fread(&temp, sizeof(Student),1,file)){
+        if (strcmp(temp.FName, FName) == 0 &&
+        strcmp(temp.LName, LName) == 0 ){
+        position=ftell(file)-sizeof(Student);
+        break;
+        }
+    }
+    while(fread(&temp,sizeof(Student),1,file)){
+        fseek(file,-2*(long)sizeof(Student),SEEK_CUR);
+        fwrite(&temp,sizeof(Student),1,file);
+        fseek(file,sizeof(Student),SEEK_CUR);
+    }
+    fseek(file,-(long)sizeof(Student),SEEK_END);
+    ftruncate(fileno(file), ftell(file));
+}

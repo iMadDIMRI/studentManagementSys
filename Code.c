@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "FonctionSource.c"
+#include <unistd.h>
 
 int main(){
     char FName[20],LName[20];
@@ -37,7 +38,11 @@ int main(){
             editS(file,FName,LName);
             break;
             case 5:
-            printf("Fonction Non complete\n");
+            printf("Enter the first Name:\n");
+            scanf("%19s",FName);
+            printf("Enter the Last Name:\n");
+            scanf("%19s",LName);
+            deleteS(file,FName,LName);
             break;
             case 0:
             break;
