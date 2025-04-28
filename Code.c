@@ -1,15 +1,4 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
 #include "FonctionSource.c"
-#include <unistd.h>
-#include <errno.h>
-#include <conio.h>
-
-void clrscr()
-{
-    system("@cls||clear");
-}
 
 int main(){
     char FName[20],LName[20];
@@ -21,34 +10,40 @@ int main(){
         return 0;
     }
     while(N){
-        printf("MAIN MENU:\n 1:Add a student \n 2:Search a student \n 3:Show All student \n 4:Change a student's info \n 5:Delete a student \n 6:Delete ALL students \n 7:Clear Window \n 0:Exit the programme.\n ");
+        printf("MAIN MENU:\n 1:Add a student \n 2:Search a student \n 3:Show All student \n 4:Change a student's info \n 5:Delete a student \n 6:Delete ALL students \n 7:Clear Window \n 0:Exit the programme.\n NB:When you enter a value and it reask you for the same information it means you didnt enter it in the correct format showen by the question\n");
         scanf("%d",&N);
         switch(N){
             case 1:
             addStudent(file);
             break;
             case 2:
-            printf("Enter the first Name:\n");
+            do {
+            printf("Enter the first Name: [Format:Azer..y]\n");
             scanf("%19s",FName);
-            printf("Enter the Last Name:\n");
+            printf("Enter the Last Name: [Format:AZER..Y]\n");
             scanf("%19s",LName);
+        } while(!(FormVerif(FName,"FName") && FormVerif(LName,"LName")));
             searchS(file,FName,LName);
             break;                
             case 3:
             showAllS(file);
             break;
             case 4:
-            printf("Enter the first Name:\n");
-            scanf("%19s",FName);
-            printf("Enter the Last Name:\n");
-            scanf("%19s",LName);
+            do {
+                printf("Enter the first Name: [Format:Azer..y]\n");
+                scanf("%19s",FName);
+                printf("Enter the Last Name: [Format:AZER..Y]\n");
+                scanf("%19s",LName);
+            } while(!(FormVerif(FName,"FName") && FormVerif(LName,"LName")));
             editS(file,FName,LName);
             break;
             case 5:
-            printf("Enter the first Name:\n");
-            scanf("%19s",FName);
-            printf("Enter the Last Name:\n");
-            scanf("%19s",LName);
+            do {
+                printf("Enter the first Name: [Format:Azer..y]\n");
+                scanf("%19s",FName);
+                printf("Enter the Last Name: [Format:AZER..Y]\n");
+                scanf("%19s",LName);
+            } while(!(FormVerif(FName,"FName") && FormVerif(LName,"LName")));
             deleteS(file,FName,LName);
             break;
             case 6:
@@ -60,7 +55,7 @@ int main(){
             }
             break;
             case 7:
-            clrscr(); // Clear the screen
+            system("@cls||clear");
             printf("Screen cleared!\n");
             break;
             case 0:

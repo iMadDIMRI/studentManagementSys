@@ -1,3 +1,10 @@
+#include <ctype.h>
+#include <errno.h>
+#include <conio.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
 typedef struct {
     char FName[20];
@@ -23,6 +30,45 @@ int isInDB(FILE *file, Student *target) {
     return 0; //Not found
 }
 
+
+int FormVerif(char* Word,char* Type){
+    int Valide=1,n;
+    if (strcmp(Type,"FName")==0){
+        if ((isupper(Word[0])==0)) Valide=0;
+        for (int i=1;i<strlen(Word);i++){
+            if (!(islower(Word[i]) || Word[i]==' ')) Valide=0;
+        }
+    }
+    if (strcmp(Type,"LName")==0){
+        for (int i=0;i<strlen(Word);i++){
+            if (!(isupper(Word[i]) || Word[i]==' ')) Valide=0;
+            }
+        }
+    if (strcmp(Type,"Year")==0){
+        for (int i=0;i<strlen(Word);i++){
+            if (!(isdigit(Word[i]))) Valide=0;
+            }
+    }
+    if (strcmp(Type,"Sector")==0){
+        for (int i=0;i<strlen(Word);i++){
+            if (!(isupper(Word[i]))) Valide=0;
+            }
+        }
+    if (strcmp(Type,"ARating")==0){
+        n=0;
+        for (int i=0;i<strlen(Word);i++){
+            if (!(isdigit(Word[i]))){
+            if ((Word[i]=='.'|| Word[i]==',')&& n==0) {
+                n++;
+                continue;
+            }
+            Valide=0;
+        }
+    }
+}
+        return Valide;
+    }
+
 void addStudent(FILE *file){
     Student *temp = (Student *)malloc(sizeof(Student));
 
@@ -30,46 +76,60 @@ void addStudent(FILE *file){
         printf("Memory allocation failed!\n");
         return;
     }
-
     //taking All informations about the student to add in DB
-
-    printf("Enter the first Name:\n");
-    scanf("%19s",temp->FName);
+    do {
+        printf("Enter the first Name: [Format:Azer..y]\n");
+        scanf("%19s",temp->FName);
+    }while(!FormVerif(temp->FName,"FName"));
     
-    printf("Enter the Last Name:\n");
-    scanf("%19s",temp->LName);
-    
-    printf("Enter the Sector:\n");
-    scanf("%6s",temp->Sector);
-
-    printf("Enter the Year:\n");
-    scanf("%4s",temp->Year);
-
-    printf("Enter the ARating:\n");
-    scanf("%5s",temp->ARating);
+    do {
+        printf("Enter the Last Name: [Format:AZER..Y]\n");
+        scanf("%19s",temp->LName);
+    } while (!FormVerif(temp->LName,"LName"));
+    do {
+        printf("Enter the Sector: [Format:AZER..Y]\n");
+        scanf("%19s",temp->Sector);
+    } while (!FormVerif(temp->Sector,"Sector"));
+    do {
+        printf("Enter the Year: [Format: XXXX]\n");
+        scanf("%19s",temp->Year);
+    } while (!FormVerif(temp->Year,"Year"));
+    do {
+        printf("Enter the Average Rating: [Format:XX.XX or XX,XX]\n");
+        scanf("%19s",temp->ARating);
+    } while (!FormVerif(temp->ARating,"ARating"));
 
    if (isInDB(file,temp)){
     printf("This Student is already in th DataBase");
    }
    else{
     // Display the result and add it to the DataBase
-    printf("\n The following Student has been added : \nStudent Info: %s %s\n",temp->FName,temp->LName);
+    printf("\n The following Student has been added : \nStudent Info: %s %s %s %s %s\n",temp->FName,temp->LName,temp->Sector,temp->Year,temp->ARating);
     fwrite(temp, sizeof(Student),1,file);
    }
    free(temp);
 }
 
 void showAllS(FILE*file){
+    int size;
+    fseek (file, 0, SEEK_END);
+    size = ftell(file);
+
+    if (0 == size) {
+        printf("DataBase is empty\n");
+    }
+    else
+    {
     rewind(file);
     int n=1;
     Student temp;
-
     printf("\n List of Students:\n");
 
     while(fread(&temp,sizeof(Student),1,file)){
     printf("Student %d: %s %s | Sector: %s | Year: %s | ARating: %s\n",n, temp.FName, temp.LName, temp.Sector, temp.Year, temp.ARating);   
     n++;
-    }
+    }}
+    printf("\n");
 }
 
 void searchS(FILE *file,char *FName, char *LName){
@@ -98,24 +158,34 @@ void editS(FILE* file,char *FName, char *LName){
                 scanf("%d",&choice);
                 switch(choice){
                     case 1:
-                    printf("Please enter the new First Name:\n");
-                    scanf("%s",temp.FName);
+                    do {
+                        printf("Enter the first Name: [Format:Azer..y]\n");
+                        scanf("%19s",temp.FName);
+                    }while(!FormVerif(temp.FName,"FName"));
                     break;
                     case 2:
-                    printf("Please enter the new Last Name:\n");
-                    scanf("%s",temp.LName);
+                    do {
+                        printf("Enter the Last Name: [Format:AZER..Y]\n");
+                        scanf("%19s",temp.LName);
+                    } while (!FormVerif(temp.LName,"LName"));
                     break;                
                     case 3:
-                    printf("Please enter the new Sector:\n");
-                    scanf("%s",temp.Sector);
+                    do {
+                        printf("Enter the Sector: [Format:AZER..Y]\n");
+                        scanf("%19s",temp.Sector);
+                    } while (!FormVerif(temp.Sector,"Sector"));
                     break;
                     case 4:
-                    printf("Please enter the new Year:\n");
-                    scanf("%s",temp.Year);
+                    do {
+                        printf("Enter the Year: [Format: XXXX]\n");
+                        scanf("%19s",temp.Year);
+                    } while (!FormVerif(temp.Year,"Year"));
                     break;
                     case 5:
-                    printf("Please enter the new Average Rating:\n");
-                    scanf("%s",temp.ARating);
+                    do {
+                        printf("Enter the Average Rating: [Format:XX.XX or XX,XX]\n");
+                        scanf("%19s",temp.ARating);
+                    } while (!FormVerif(temp.ARating,"ARating"));
                     break;
                     case 0:
                     break;
@@ -150,41 +220,3 @@ void deleteS(FILE* file,char *FName, char *LName){
         printf("error: %d\n",errno);
     }
 }
-
-int FormVerif(char* Word,char* Type){
-    int Valide=1,n;
-    if (strcmp(Type,"FName")==0){
-        if ((isupper(Word[0])==0)) Valide=0;
-        for (int i=1;i<strlen(Word);i++){
-            if (!(islower(Word[i]) || Word[i]==' ')) Valide=0;
-        }
-    }
-    if (strcmp(Type,"LName")==0){
-        for (int i=0;i<strlen(Word);i++){
-            if (!(isupper(Word[i]) || Word[i]==' ')) Valide=0;
-            }
-        }
-    if (strcmp(Type,"Year")==0){
-        for (int i=0;i<strlen(Word);i++){
-            if (!(isdigit(Word[i]))) Valide=0;
-            }
-    }
-    if (strcmp(Type,"Sector")==0){
-        for (int i=0;i<strlen(Word);i++){
-            if (!(isupper(Word[i]))) Valide=0;
-            }
-        }
-    if (strcmp(Type,"ARating")==0){
-        n=0;
-        for (int i=0;i<strlen(Word);i++){
-            if (!(isdigit(Word[i]))){
-            if ((Word[i]=='.'|| Word[i]==',')&& n==0) {
-                n++;
-                continue;
-            Valide=0;
-            }
-        }
-    }
-}
-        return Valide;
-    }
